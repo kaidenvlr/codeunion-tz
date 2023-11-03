@@ -11,13 +11,13 @@ class Command(BaseCommand):
     help = "Update currency rate by name"
 
     def add_arguments(self, parser):
-        parser.add_argument("-n", "--name", type=str)
+        parser.add_argument("--id", type=int)
 
     def handle(self, *args, **options):
-        name = options.get("name", None)
-        if name:
+        pk = options.get("id", None)
+        if pk:
             try:
-                queryset = Currency.objects.get(name=name)
+                queryset = Currency.objects.get(pk=pk)
                 serializer = CurrencySerializer(queryset)
                 self.stdout.write(self.style.SUCCESS("Returned 1 row:"))
                 self.stdout.write(json.dumps(serializer.data, indent=1))
