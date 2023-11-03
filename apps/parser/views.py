@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 from rest_framework import status
@@ -22,12 +23,12 @@ class CurrencyViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CurrencySerializer
     permission_classes = (permissions.AllowAny,)
 
+    def get_queryset(self):
+        return Currency.objects.all()
+
     @action(detail=True, methods=('get',))
-    def retrieve(self, request, id: int, *args, **kwargs):
-        try:
-            queryset = Currency.objects.get(id=id)
-            serializer = self.serializer_class(queryset)
-            return Response({"status": "ok", "data": serializer.data}, status=status.HTTP_200_OK)
-        except ObjectDoesNotExist:
-            return Response({"status": "error", "description": "Currency does not exist."},
-                            status=status.HTTP_404_NOT_FOUND)
+    def retrieve(self, request, pk: int, *args, **kwargs):
+        queryset = self.get_queryset()
+        currency = get_object_or_404(queryset, pk=pk)
+        serializer = self.serializer_class(currency)
+        return Response(serializer.data)
