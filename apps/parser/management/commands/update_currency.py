@@ -8,14 +8,14 @@ class Command(BaseCommand):
     help = "Update currency rate by name"
 
     def add_arguments(self, parser):
-        parser.add_argument("name", type=str)
+        parser.add_argument("id", type=str)
         parser.add_argument("rate", type=float)
 
     def handle(self, *args, **options):
-        name = options["name"]
+        pk = options["id"]
         rate = options["rate"]
         try:
-            currency = Currency.objects.get(name=name)
+            currency = Currency.objects.get(pk=pk)
             currency.rate = rate
             currency.save()
             self.stdout.write(self.style.SUCCESS("Currency was successfully updated."))
