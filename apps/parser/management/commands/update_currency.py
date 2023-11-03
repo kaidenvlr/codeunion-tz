@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Update currency rate by name"
 
     def add_arguments(self, parser):
-        parser.add_argument("id", type=str)
+        parser.add_argument("id", type=int)
         parser.add_argument("rate", type=float)
 
     def handle(self, *args, **options):
