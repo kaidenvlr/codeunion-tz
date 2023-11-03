@@ -10,6 +10,7 @@ from apps.parser.models import Currency
 from apps.parser.serializers import CurrencySerializer
 
 
+# Можно сделать Views с помощью rest_framework.generics, можно через декораторы.
 class AllCurrencyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
