@@ -24,7 +24,6 @@ class CurrencyTests(APITestCase):
         response = self.mock_get_token(create=False)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
     def test_get_currencies(self):
         token = self.mock_get_token().data['token']
         url = reverse(viewname='currencies')
