@@ -8,8 +8,9 @@ from apps.parser.models import Currency
 
 
 class CurrencyTests(APITestCase):
-    def mock_get_token(self):
-        User.objects.create_superuser(username=settings.SUPERUSER_USERNAME, password=settings.SUPERUSER_PASSWORD)
+    def mock_get_token(self, create=True):
+        if create:
+            User.objects.create_superuser(username=settings.SUPERUSER_USERNAME, password=settings.SUPERUSER_PASSWORD)
         url = reverse('api-token-auth')
         data = {'username': settings.SUPERUSER_USERNAME, 'password': settings.SUPERUSER_PASSWORD}
         response = self.client.post(url, data=data)
@@ -18,7 +19,11 @@ class CurrencyTests(APITestCase):
     def test_get_token(self):
         response = self.mock_get_token()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        return response.data['token']
+
+    def test_get_token_error(self):
+        response = self.mock_get_token(create=False)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
     def test_get_currencies(self):
         token = self.mock_get_token().data['token']
@@ -33,3 +38,9 @@ class CurrencyTests(APITestCase):
         response = self.client.get(url, format='json', headers={'Authorization': f'Bearer {token}'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {"id": 1, "name": "SUP", "rate": 123.12})
+
+    def test_get_currency_error(self):
+        token = self.mock_get_token().data['token']
+        url = reverse(viewname='currency', kwargs={'pk': 1})
+        response = self.client.get(url, format='json', headers={'Authorization': f'Bearer {token}'})
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
