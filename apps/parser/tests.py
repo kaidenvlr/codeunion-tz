@@ -22,16 +22,16 @@ class CurrencyTests(APITestCase):
 
     def test_get_token_error(self):
         response = self.mock_get_token(create=False)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_currencies(self):
-        token = self.mock_get_token().data['token']
+        token = self.mock_get_token().data['access']
         url = reverse(viewname='currencies')
         response = self.client.get(url, format='json', headers={'Authorization': f'Bearer {token}'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_currency(self):
-        token = self.mock_get_token().data['token']
+        token = self.mock_get_token().data['access']
         Currency.objects.create(name="SUP", rate=123.12)
         url = reverse(viewname='currency', kwargs={'pk': 1})
         response = self.client.get(url, format='json', headers={'Authorization': f'Bearer {token}'})
@@ -39,7 +39,7 @@ class CurrencyTests(APITestCase):
         self.assertEqual(response.data, {"id": 1, "name": "SUP", "rate": 123.12})
 
     def test_get_currency_error(self):
-        token = self.mock_get_token().data['token']
+        token = self.mock_get_token().data['access']
         url = reverse(viewname='currency', kwargs={'pk': 1})
         response = self.client.get(url, format='json', headers={'Authorization': f'Bearer {token}'})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
