@@ -9,7 +9,7 @@ class Pagination(PageNumberPagination):
     page_query_param = "page"
 
     def get_paginated_response(self, data):
-        page_count = self.page.paginator.count // self.page_size
+        page_count = self.page.paginator.count // self.page.paginator.per_page
         if self.page.paginator.count % self.page_size != 0:
             page_count += 1
         return Response({
