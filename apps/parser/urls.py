@@ -1,3 +1,4 @@
+"""Urls file for parser application"""
 from django.urls import path
 
 from apps.parser import views

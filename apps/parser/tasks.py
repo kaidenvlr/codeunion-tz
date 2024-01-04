@@ -1,3 +1,4 @@
+"""Celery tasks file of parser application"""
 import requests
 import xmltodict
 from celery import shared_task
@@ -12,6 +13,7 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def refresh_rate():
+    """Refresh currency's rate task"""
     with transaction.atomic():
         try:
             response = requests.get(settings.CURRENCY_URL)
@@ -25,9 +27,8 @@ def refresh_rate():
                     currency.rate = rate
                     currency.save()
                 return True
-            else:
-                print(data)
-                return False
+            print(data)
+            return False
         except Exception as e:
-            print(f"An error occured: {e}")
+            print(f"An unpredictable error occured: {e}")
             return False

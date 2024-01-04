@@ -1,3 +1,6 @@
+"""
+Celery app to create autoparse task
+"""
 import os
 
 from celery import Celery
