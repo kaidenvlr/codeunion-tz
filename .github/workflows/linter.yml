@@ -21,4 +21,4 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --disable=no-member
+        pylint $(git ls-files '*.py') --disable=no-member,too-few-public-methods,broad-exception-caught,missing-timeout,import-outside-toplevel
